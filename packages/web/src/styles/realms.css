@@ -1,5 +1,76 @@
 /* src/styles/realms.css */
 
+/*
+ * DEFAULT / STARLIGHT PALETTE
+ * A premium, Apple-inspired dark theme. Also serves as the fallback for any
+ * realm that does not define its own tokens, so the UI is never unstyled.
+ */
+:root,
+[data-theme="starlight"],
+[data-theme="magic"] {
+  /* ─── Core palette ─── */
+  --theme-primary: #3b82f6;
+  --theme-primary-rgb: 59, 130, 246;
+  --theme-secondary: #1d4ed8;
+  --theme-accent: #93c5fd;
+  --theme-background: #09090b;
+  --theme-surface: #121215;
+  --theme-glow: rgba(59, 130, 246, 0.2);
+  --theme-border: rgba(255, 255, 255, 0.07);
+
+  /* ─── Typography hierarchy ─── */
+  --theme-text: #f4f4f5;
+  --theme-text-secondary: rgba(244, 244, 245, 0.65);
+  --theme-text-tertiary: rgba(244, 244, 245, 0.35);
+
+  /* ─── Aether aliases ─── */
+  --aether-text-primary: var(--theme-text);
+  --aether-text-secondary: var(--theme-text-secondary);
+  --aether-text-tertiary: var(--theme-text-tertiary);
+  --aether-bg-primary: var(--theme-background);
+  --aether-bg-secondary: var(--theme-surface);
+  --aether-accent: var(--theme-primary);
+
+  /* ─── Glass system ─── */
+  --glass: rgba(255, 255, 255, 0.045);
+  --glass-rgb: 255, 255, 255;
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 24px;
+  --glass-shine: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  /* ─── Shape ─── */
+  --radius-card: 14px;
+  --radius-button: 10px;
+  --radius-input: 10px;
+
+  /* ─── Spacing ─── */
+  --padding-card: 1.25rem;
+  --padding-button-x: 1rem;
+  --padding-button-y: 0.5rem;
+
+  /* ─── Depth ─── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 24px rgba(59, 130, 246, 0.18);
+
+  /* ─── Motion ─── */
+  --transition-speed: 350ms;
+  --transition-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ─── Icons ─── */
+  --icon-stroke-width: 1.5px;
+
+  /* ─── Font ─── */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter',
+    system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-weight-base: 400;
+  --font-weight-heading: 500;
+  --tracking-base: 0.01em;
+  --tracking-heading: -0.015em;
+}
+
 /* 1. IRON CORE REALM */
 [data-theme="iron-core"] {
   --theme-primary: #f97316;
