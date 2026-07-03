@@ -1,6 +1,7 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useRealm } from '@/lib/RealmContext';
 
 type GlassDepth = 'base' | 'raised' | 'floating' | 'modal' | 'toast';
 
@@ -14,6 +15,7 @@ interface GlassProps {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  animateMount?: boolean;
 }
 
 const depthMap: Record<GlassDepth, string> = {
@@ -42,9 +44,23 @@ export function Glass({
   style,
   children,
   onClick,
+  animateMount = false,
 }: GlassProps) {
+  const { getMountAnimation } = useRealm();
+  
+  const mountProps = animateMount 
+    ? {
+        variants: getMountAnimation(),
+        initial: "initial",
+        animate: "animate",
+        exit: "exit",
+        transition: { type: 'spring', damping: 20, stiffness: 100 }
+      } 
+    : {};
+
   return (
     <motion.div
+      {...mountProps}
       onClick={onClick}
       className={cn(
         'rounded-2xl transition-all relative',

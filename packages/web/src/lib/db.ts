@@ -1,10 +1,19 @@
 import Dexie, { Table } from 'dexie';
 
+export interface CrisisLog {
+  id?: number;
+  agentId: string;
+  timestamp: string;
+  savedPath: string;
+  yamlFrontmatter: string;
+  statusSnapshot: string;
+}
+
 export interface Entity {
   id: string;
   type: string;
   title: string;
-  content: any;
+  content: string;
   realm: string;
   tags: string[];
   status?: string;
@@ -14,12 +23,14 @@ export interface Entity {
 }
 
 export class CosmosDatabase extends Dexie {
-  entities!: Table<Entity>;
+  cosmos_crisis_logs!: Table<CrisisLog, number>;
+  entities!: Table<any, any>;
 
   constructor() {
-    super('CosmosDB');
+    super('CosmosArchiveDB');
     this.version(1).stores({
-      entities: 'id, type, realm, updatedAt, *tags'
+      cosmos_crisis_logs: '++id, agentId, timestamp, savedPath',
+      entities: 'id, type, title, realm, status, createdAt, updatedAt'
     });
   }
 }

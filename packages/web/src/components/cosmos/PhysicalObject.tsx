@@ -49,33 +49,25 @@ export const PhysicalObject: React.FC<PhysicalObjectProps> = ({
     if (type === 'scroll') return '📜';
 
     switch (realmId) {
-      case 'retro':
+      case 'retro-tape':
         if (type === 'file') return '📼';
         if (type === 'knowledge') return '📖';
         if (type === 'mission') return '📻';
         return '📁';
-      case 'iron-core':
+      case 'ironman-nano':
         if (type === 'mission') return '🧳';
         if (type === 'project') return '📦';
         if (type === 'file') return '🔩';
         return '⚙️';
-      case 'magic':
-        if (type === 'knowledge') return '📜';
+      case 'venom-liquid':
+        if (type === 'knowledge') return '🌑';
         if (type === 'memory') return '🔮';
-        if (type === 'idea') return '✨';
-        return '🌙';
-      case 'ocean':
-        if (type === 'memory') return '🐚';
-        if (type === 'idea') return '🫧';
-        return '💧';
-      case 'library':
-        if (type === 'knowledge') return '📚';
-        if (type === 'file') return '📜';
-        return '🔖';
-      case 'blueprint':
-        if (type === 'project') return '📐';
-        if (type === 'file') return '🖋️';
-        return '🔵';
+        if (type === 'idea') return '⚫';
+        return '〰';
+      case 'cyber-neon':
+        if (type === 'memory') return '💠';
+        if (type === 'idea') return '⚡';
+        return '🛸';
       default:
         return '🛸';
     }
@@ -99,8 +91,8 @@ export const PhysicalObject: React.FC<PhysicalObjectProps> = ({
       whileHover={{ 
         scale: 1.05 + (energyLevel * 0.05), 
         y: -10,
-        rotateY: realmId === 'iron-core' ? 5 : 0,
-        rotateX: realmId === 'magic' ? -5 : 0,
+        rotateY: realmId === 'ironman-nano' ? 5 : 0,
+        rotateX: realmId === 'venom-liquid' ? -5 : 0,
         boxShadow: `0 30px 60px rgba(0,0,0,0.5), 0 0 ${20 * energyLevel}px var(--theme-primary)`
       }}
       onHoverStart={() => dispatch('OBJECT_TOUCHED', { type, title })}
@@ -111,7 +103,7 @@ export const PhysicalObject: React.FC<PhysicalObjectProps> = ({
       <Glass 
         className="relative p-6 flex flex-col gap-4 overflow-hidden border-white/10 group-hover:border-[var(--theme-primary)]/40 transition-all duration-500"
         style={{ 
-          borderRadius: realmId === 'iron-core' ? '0px' : realmId === 'magic' ? '40px' : '24px',
+          borderRadius: realmId === 'ironman-nano' ? '0px' : realmId === 'venom-liquid' ? '40px' : '24px',
           boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
         }}
       >

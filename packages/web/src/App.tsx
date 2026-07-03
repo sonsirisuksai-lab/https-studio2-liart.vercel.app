@@ -59,6 +59,8 @@ const WorkspaceCorePage = React.lazy(() => import('./routes/workspace-core'));
 const AiCenterPage = React.lazy(() => import('./routes/ai-center'));
 const PersonalSpacePage = React.lazy(() => import('./routes/personal-space'));
 const NotFound = React.lazy(() => import('./routes/NotFound'));
+const ArchivePage = React.lazy(() => import('./routes/ArchivePage'));
+const LogisticsConsole = React.lazy(() => import('./routes/LogisticsConsole'));
 
 // Auth Pages
 const Login = React.lazy(() => import('./routes/login'));
@@ -114,6 +116,8 @@ function AppContent() {
           <Route path="media-hub" element={<MediaHubPage />} />
           <Route path="workspace-core" element={<WorkspaceCorePage />} />
           <Route path="ai-center" element={<AiCenterPage />} />
+          <Route path="archive" element={<ArchivePage />} />
+          <Route path="logistics" element={<LogisticsConsole />} />
           <Route path="personal-space" element={<PersonalSpacePage />} />
           <Route path="api/focus-mode" element={<ApiSyncRoute type="focus" />} />
           <Route path="api/nfc-tap" element={<ApiSyncRoute type="nfc" />} />

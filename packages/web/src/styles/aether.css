@@ -6,7 +6,7 @@
 
 @import './realms.css';
 
-:root, [data-theme="starlight"], [data-theme="aether"] {
+:root, [data-theme="cyber-neon"], [data-theme="aether"] {
   /* ─── 1. COLOR ─── */
   --theme-primary: #7C3AED;
   --theme-primary-rgb: 124, 58, 237;

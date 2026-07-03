@@ -111,7 +111,7 @@ const WorkspaceUniverse = () => {
             <motion.div
               whileHover={{ scale: 1.2, zIndex: 50, y: -10 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => navigate(sphere.id === 'starlight' ? '/' : `/${sphere.id}`)}
+              onClick={() => navigate(sphere.id === 'cyber-neon' ? '/' : `/${sphere.id}`)}
               className="group cursor-pointer flex flex-col items-center"
             >
               {/* The Sphere Visual */}
