@@ -1,0 +1,15 @@
+{
+  "installCommand": "npm install --legacy-peer-deps",
+  "buildCommand": "npm run build -w @cosmos/web",
+  "outputDirectory": "packages/web/dist",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://<YOUR-REPLIT-URL>/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/packages/web/dist/$1"
+    }
+  ]
+}

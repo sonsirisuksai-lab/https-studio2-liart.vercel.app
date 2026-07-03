@@ -1,0 +1,28 @@
+{
+  "name": "@cosmos/api",
+  "version": "5.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json && tsc-alias",
+    "start": "node dist/index.js",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.110.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.5.2",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.15.21",
+    "tsc-alias": "^1.8.16",
+    "tsx": "^4.19.4",
+    "typescript": "^5.7.2"
+  }
+}
