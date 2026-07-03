@@ -1,4 +1,4 @@
-import { db } from '../../../../packages/web/src/lib/db'; // Connects directly to IndexedDB Dexie setup
+import { db } from '@cosmos/web/src/lib/db'; // Import from @cosmos/web workspace package
 
 export interface SearchResult {
   id: string;
