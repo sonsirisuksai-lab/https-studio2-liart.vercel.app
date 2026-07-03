@@ -19,9 +19,18 @@ import type { Request, Response, NextFunction } from "express";
 import { tokenBudget } from "../services/tokenBudget.js";
 import { neuralGrid } from "../services/neuralGrid.js";
 
-// Read threshold from env; fall back to 5 %.
+/**
+ * Read the guard threshold from env.
+ * TOKEN_CRITICAL_THRESHOLD takes precedence; TOKEN_GUARD_THRESHOLD_PCT is the
+ * legacy alias.  Both are accepted so older configs keep working.
+ * Default: 5 % remaining.
+ */
 function readThreshold(): number {
-  const v = parseInt(process.env["TOKEN_GUARD_THRESHOLD_PCT"] ?? "", 10);
+  const raw =
+    process.env["TOKEN_CRITICAL_THRESHOLD"] ??
+    process.env["TOKEN_GUARD_THRESHOLD_PCT"] ??
+    "";
+  const v = parseInt(raw, 10);
   return Number.isFinite(v) && v >= 0 && v <= 100 ? v : 5;
 }
 
