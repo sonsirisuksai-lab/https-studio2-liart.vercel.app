@@ -5,14 +5,15 @@ function getEnvVar(key: string): string {
     return process.env[key] as string;
   }
   try {
-    if (typeof import !== 'undefined' && typeof import.meta !== 'undefined') {
-      const meta = import.meta as any;
-      if (meta.env && meta.env[key]) {
-        return meta.env[key];
-      }
-      if (meta.env && meta.env[`VITE_${key}`]) {
-        return meta.env[`VITE_${key}`];
-      }
+    // @ts-ignore
+    if (import.meta.env && import.meta.env[key]) {
+      // @ts-ignore
+      return import.meta.env[key];
+    }
+    // @ts-ignore
+    if (import.meta.env && import.meta.env[`VITE_${key}`]) {
+      // @ts-ignore
+      return import.meta.env[`VITE_${key}`];
     }
   } catch {}
   return '';
