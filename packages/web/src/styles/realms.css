@@ -1,5 +1,32 @@
 /* src/styles/realms.css */
 
+/*
+ * DEFAULT / STARLIGHT PALETTE
+ * A premium, Apple-inspired dark theme. Also serves as the fallback for any
+ * realm that does not define its own tokens, so the UI is never unstyled.
+ */
+:root,
+[data-theme="starlight"],
+[data-theme="magic"],
+[data-theme="void"] {
+  --theme-primary: #3b82f6;
+  --theme-primary-rgb: 59, 130, 246;
+  --theme-background: #09090b;
+  --theme-surface: #141418;
+  --theme-text: #f4f4f5;
+  --theme-glow: rgba(59, 130, 246, 0.35);
+
+  --radius-card: 16px;
+  --radius-button: 10px;
+
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-rgb: 255, 255, 255;
+  --glass-border: rgba(255, 255, 255, 0.1);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter',
+    system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
 /* 1. IRON CORE REALM */
 [data-theme="iron-core"] {
   --theme-primary: #f97316;

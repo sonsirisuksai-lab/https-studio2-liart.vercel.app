@@ -12,7 +12,6 @@ import { useUniverse } from '@/lib/UniverseContext';
 import { PhysicalObject } from '@/components/cosmos/PhysicalObject';
 import { StatCard } from '@/components/cosmos/StatCard';
 import { ActivityChart } from '@/components/cosmos/ActivityChart';
-import { BioMembrane } from '@/components/cosmos/BioMembrane';
 import { BridgeHero } from '@/components/cosmos/BridgeHero';
 import { CrewBroadcast } from '@/components/cosmos/CrewBroadcast';
 import { QuickCapture } from '@/components/cosmos/QuickCapture';
@@ -44,7 +43,7 @@ export const NexusDashboard = () => {
   }, [say]);
 
   return (
-    <div className="w-full min-h-screen bg-[var(--theme-background)] text-[var(--theme-text)]">
+    <div className="w-full text-[var(--theme-text)]">
       
       {/* ─── SYSTEM ACTION OVERLAY ─── */}
       <AnimatePresence>
@@ -78,7 +77,7 @@ export const NexusDashboard = () => {
       </AnimatePresence>
 
       {/* ─── THE BRIDGE LAYOUT ─── */}
-      <div className="max-w-[1920px] mx-auto p-6 lg:p-12 space-y-12">
+      <div className="space-y-10">
         
         {/* BRIDGE TOP: IDENTITY & HERO */}
         <motion.section 
@@ -147,11 +146,6 @@ export const NexusDashboard = () => {
            <StatCard label="System Version" value={`v${evolutionLevel}.0`} icon={<Sparkles className="w-4 h-4" />} trend="Evolutionary" color="var(--theme-primary)" />
         </footer>
 
-      </div>
-
-      {/* BACKGROUND ELEMENTS */}
-      <div className="fixed inset-0 z-[-1] opacity-30 pointer-events-none">
-        <BioMembrane />
       </div>
 
     </div>

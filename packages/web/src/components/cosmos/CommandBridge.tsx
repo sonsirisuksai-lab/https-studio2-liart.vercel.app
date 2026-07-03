@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Compass, Zap, Sparkles, Activity, Shield, 
-  Cpu, LayoutGrid, Terminal, Search, Mic, 
-  ChevronRight, Command, Bell, Settings,
-  Database, RefreshCw, Layers, Box, Maximize2
+import {
+  Compass, Zap, Search, Mic, Command, Settings,
+  Database, RefreshCw, Layers, Box, Maximize2, Activity,
+  Sparkles, X,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useRealm } from '@/lib/RealmContext';
 import { useUniverse } from '@/lib/UniverseContext';
 import { useRobin } from '@/lib/RobinContext';
-import { Glass } from '@/components/aether/Glass';
-import { Label } from '@/components/aether/Typography';
 
 const CommandBridge = () => {
   const navigate = useNavigate();
@@ -22,7 +19,6 @@ const CommandBridge = () => {
   const [aiStatus, setAiStatus] = useState<'idle' | 'thinking' | 'analyzing'>('idle');
   const systemHealth = Math.floor(energy);
 
-  // Simulate AI Status changes
   useEffect(() => {
     const interval = setInterval(() => {
       const statuses: ('idle' | 'thinking' | 'analyzing')[] = ['idle', 'thinking', 'analyzing'];
@@ -31,372 +27,232 @@ const CommandBridge = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const statusLabel =
+    universeState === 'shifting' ? 'Evolving' :
+    universeState === 'restoring' ? 'Restoring' :
+    aiStatus === 'thinking' ? 'Thinking' :
+    aiStatus === 'analyzing' ? 'Analyzing' :
+    'All systems operational';
+
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-[100] p-4 pointer-events-none">
-        <div className="max-w-[1800px] mx-auto flex items-start justify-between gap-4">
-          
-          {/* ZONE 01 & 03: IDENTITY & SYSTEM STATUS */}
-          <div className="flex flex-col gap-2 pointer-events-auto">
-            <Glass 
-              blur={30} 
-              opacity={0.6} 
-              border 
-              className="px-5 py-3 rounded-2xl flex items-center gap-4 border-white/5 shadow-2xl group cursor-pointer"
-              onClick={() => navigate('/')}
-            >
-              <div className="relative">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--theme-primary)] to-transparent flex items-center justify-center shadow-[0_0_20px_var(--theme-glow)]">
-                  <span className="text-xl">{realm.robin.icon}</span>
-                </div>
-                <motion.div 
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  className="absolute -inset-1 border border-dashed border-[var(--theme-primary)]/20 rounded-xl"
-                />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-black uppercase tracking-[0.3em] text-[var(--theme-text)]">COSMOS OS</span>
-                  <span className="text-[8px] font-mono bg-[var(--theme-primary)]/10 text-[var(--theme-primary)] px-1.5 py-0.5 rounded border border-[var(--theme-primary)]/20 font-bold">{realm.name.toUpperCase()}</span>
-                </div>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[9px] font-mono text-[var(--theme-text-tertiary)] font-bold uppercase tracking-widest">{realmId.toUpperCase()} BRIDGE</span>
-                  </div>
-                </div>
-              </div>
-            </Glass>
+      {/* ─── TOP BAR ─── */}
+      <header className="fixed top-0 inset-x-0 z-[100] border-b border-[var(--theme-text)]/10 bg-[var(--theme-background)]/70 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-[1600px] items-center gap-4 px-6 lg:px-10">
 
-            {/* SYSTEM STATUS MINI PANEL */}
-            <Glass blur={24} opacity={0.3} border className="px-4 py-2 rounded-xl flex items-center gap-4 border-white/5">
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-1">
-                    <Activity className="w-2.5 h-2.5 text-cyan-400" />
-                    <span className="text-[8px] font-mono text-white/40 font-bold uppercase">Health</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-cyan-400 font-black">{systemHealth}%</span>
-                </div>
-                <div className="w-[1px] h-4 bg-white/5" />
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-1">
-                    <Database className="w-2.5 h-2.5 text-purple-400" />
-                    <span className="text-[8px] font-mono text-white/40 font-bold uppercase">DB</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-purple-400 font-black">Online</span>
-                </div>
-                <div className="w-[1px] h-4 bg-white/5" />
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-1">
-                    <RefreshCw className="w-2.5 h-2.5 text-emerald-400 animate-spin-slow" />
-                    <span className="text-[8px] font-mono text-white/40 font-bold uppercase">Sync</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-emerald-400 font-black">Active</span>
-                </div>
-              </div>
-            </Glass>
-          </div>
+          {/* Brand */}
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-3 shrink-0 group"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--theme-primary)]/15 text-lg transition-transform group-hover:scale-105">
+              {realm.robin.icon}
+            </span>
+            <span className="hidden sm:flex flex-col items-start leading-none">
+              <span className="text-sm font-semibold tracking-tight text-[var(--theme-text)]">Cosmos</span>
+              <span className="text-[11px] font-medium text-[var(--theme-text)]/45">{realm.name}</span>
+            </span>
+          </button>
 
-          {/* ZONE 02: AI COMMAND CENTER (LIVING PANEL) */}
-          <div className="flex-1 max-w-2xl pointer-events-auto">
-            <Glass 
-              blur={40} 
-              opacity={0.8} 
-              border 
-              className="h-16 px-6 rounded-full flex items-center gap-4 border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.2)] group"
-            >
-              {/* AI Avatar / Status Indicator */}
-              <div className="relative flex-shrink-0">
-                <div className="w-10 h-10 rounded-full bg-black/40 border border-white/5 flex items-center justify-center overflow-hidden">
-                  <motion.div
-                    animate={aiStatus === 'thinking' ? { scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] } : {}}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                    className="absolute inset-0 bg-[var(--theme-primary)]/20 blur-lg"
-                  />
-                  <span className="text-xl relative z-10">{realm.robin.body}</span>
-                </div>
-                {/* Thinking Particles */}
-                <AnimatePresence>
-                  {aiStatus !== 'idle' && (
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="absolute -top-1 -right-1"
-                    >
-                      <span className="flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--theme-primary)] opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-[var(--theme-primary)]"></span>
-                      </span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Command Input Area */}
-              <div className="flex-1 flex items-center gap-3">
-                <Command className="w-4 h-4 text-white/20" />
-                <input 
-                  type="text" 
-                  placeholder={`Command in ${realm.name} Realm...`}
-                  className="bg-transparent border-none outline-none w-full text-sm font-medium text-[var(--theme-text)] placeholder:text-white/20"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      const val = e.currentTarget.value;
-                      if (val) {
-                        say(`รับทราบครับ บอส: ${val}`);
-                        e.currentTarget.value = '';
-                      }
+          {/* Command input */}
+          <div className="flex-1 flex justify-center">
+            <div className="flex w-full max-w-md items-center gap-2.5 rounded-full border border-[var(--theme-text)]/10 bg-[var(--theme-text)]/[0.04] px-4 py-2 transition-colors focus-within:border-[var(--theme-primary)]/40">
+              <Command className="h-4 w-4 text-[var(--theme-text)]/35" />
+              <input
+                type="text"
+                aria-label="Command"
+                placeholder={`Ask or command \u00B7 ${realm.name}`}
+                className="w-full bg-transparent text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text)]/35"
+                onKeyDown={(e) => {
+                  if (e.nativeEvent.isComposing || e.keyCode === 229) return;
+                  if (e.key === 'Enter') {
+                    const val = e.currentTarget.value.trim();
+                    if (val) {
+                      say(`\u0e23\u0e31\u0e1a\u0e17\u0e23\u0e32\u0e1a\u0e04\u0e23\u0e31\u0e1a \u0e1a\u0e2d\u0e2a: ${val}`);
+                      e.currentTarget.value = '';
                     }
-                  }}
-                  onFocus={() => {
-                    // Optionally trigger MakaPrompt if focused?
-                    // For now just keep it as is but functional
-                  }}
-                />
-                <div className="flex items-center gap-2 px-2 py-1 bg-white/5 rounded-lg border border-white/5">
-                   <span className="text-[10px] font-mono text-white/40 uppercase font-bold tracking-tighter">CMD+K</span>
-                </div>
-              </div>
-
-              {/* AI Actions */}
-              <div className="flex items-center gap-2 pl-4 border-l border-white/5">
-                <button className="p-2 rounded-full hover:bg-white/5 transition-all text-white/40 hover:text-white">
-                  <Mic className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={() => window.dispatchEvent(new CustomEvent('open-maka-prompt'))}
-                  className="p-2 rounded-full hover:bg-white/5 transition-all text-white/40 hover:text-white"
-                >
-                  <Terminal className="w-4 h-4" />
-                </button>
-              </div>
-            </Glass>
+                  }
+                }}
+              />
+              <kbd className="hidden md:inline text-[10px] font-medium text-[var(--theme-text)]/35">⌘K</kbd>
+            </div>
           </div>
 
-          {/* ZONE 04 & 05: REALM SWITCHER & MISSION MENU */}
-          <div className="flex items-center gap-3 pointer-events-auto">
-            {/* Realm Switcher (Portal Selector) */}
-            <div className="flex items-center gap-1 p-1 bg-black/20 backdrop-blur-xl rounded-2xl border border-white/5">
+          {/* Right cluster */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* System status */}
+            <div className="hidden lg:flex items-center gap-2 rounded-full px-3 py-1.5">
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  isUniverseStable ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'
+                }`}
+              />
+              <span className="text-xs font-medium text-[var(--theme-text)]/60">{statusLabel}</span>
+              <span className="text-xs font-medium text-[var(--theme-text)]/35 tabular-nums">{systemHealth}%</span>
+            </div>
+
+            {/* Realm switcher */}
+            <div className="hidden md:flex items-center gap-0.5 rounded-full border border-[var(--theme-text)]/10 p-0.5">
               {realms.slice(0, 4).map((r) => (
-                <button 
+                <button
                   key={r.id}
                   onClick={() => setRealm(r.id)}
-                  className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.1em] transition-all ${
-                    realmId === r.id 
-                      ? 'bg-[var(--theme-primary)] text-white shadow-[0_0_15px_var(--theme-glow)]' 
-                      : 'text-white/30 hover:text-white hover:bg-white/5'
+                  className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                    realmId === r.id
+                      ? 'bg-[var(--theme-primary)] text-white'
+                      : 'text-[var(--theme-text)]/50 hover:text-[var(--theme-text)]'
                   }`}
                 >
                   {r.name}
                 </button>
               ))}
-              <button className="p-2 text-white/20 hover:text-white transition-colors">
-                <ChevronRight className="w-4 h-4" />
-              </button>
             </div>
 
-            {/* Mission Console Trigger */}
-            <button 
-              onClick={() => setIsConsoleOpen(!isConsoleOpen)}
-              className={`p-4 rounded-2xl transition-all border ${
-                isConsoleOpen 
-                  ? 'bg-white text-black border-white' 
-                  : 'bg-black/40 text-white border-white/5 hover:border-white/20'
-              }`}
+            <IconButton
+              label="Search"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-universal-search'))}
             >
-              <LayoutGrid className="w-6 h-6" />
-            </button>
+              <Search className="h-4 w-4" />
+            </IconButton>
+            <IconButton label="Voice" onClick={() => say('\u0e01\u0e33\u0e25\u0e31\u0e07\u0e1f\u0e31\u0e07\u0e2d\u0e22\u0e39\u0e48\u0e04\u0e23\u0e31\u0e1a \u0e1a\u0e2d\u0e2a...')}>
+              <Mic className="h-4 w-4" />
+            </IconButton>
+            <IconButton
+              label="Menu"
+              active={isConsoleOpen}
+              onClick={() => setIsConsoleOpen((v) => !v)}
+            >
+              <Compass className="h-4 w-4" />
+            </IconButton>
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* MISSION CONSOLE MODAL */}
+      {/* ─── COMMAND CONSOLE ─── */}
       <AnimatePresence>
         {isConsoleOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/60 backdrop-blur-3xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[110] flex items-start justify-center overflow-y-auto bg-[var(--theme-background)]/60 p-4 pt-24 backdrop-blur-2xl"
+            onClick={() => setIsConsoleOpen(false)}
           >
-            <div className="w-full max-w-4xl grid grid-cols-12 gap-6 pointer-events-auto">
-              {/* Sidebar Info */}
-              <div className="col-span-4 flex flex-col gap-6">
-                <Glass blur={40} opacity={0.5} border className="p-8 rounded-[40px] flex-1 border-white/5 flex flex-col justify-between">
-                  <div>
-                    <Heading size="32" className="font-black text-white leading-tight">MISSION<br/>CONTROL</Heading>
-                    <p className="text-white/40 text-sm mt-4 leading-relaxed font-medium">
-                      Operational center for all cognitive modules and realm orchestrations.
-                    </p>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/5 border border-white/5">
-                      <div className={`w-2 h-2 rounded-full ${isUniverseStable ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'}`} />
-                      <div>
-                        <div className="text-[10px] font-black text-white/40 uppercase">Vanguard Engine v{evolutionLevel}.0</div>
-                        <div className="text-xs font-bold text-white uppercase">{universeState === 'idle' ? 'LOCKED & STABLE' : universeState.toUpperCase()}</div>
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => setIsConsoleOpen(false)}
-                      className="w-full py-4 rounded-2xl bg-white text-black font-black uppercase text-xs tracking-widest hover:scale-[1.02] transition-transform"
-                    >
-                      Close Console
-                    </button>
-                  </div>
-                </Glass>
+            <motion.div
+              initial={{ opacity: 0, y: 12, scale: 0.99 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.99 }}
+              transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-3xl overflow-hidden rounded-3xl border border-[var(--theme-text)]/10 bg-[var(--theme-background)]/95 shadow-2xl"
+            >
+              {/* Console header */}
+              <div className="flex items-center justify-between border-b border-[var(--theme-text)]/10 px-7 py-5">
+                <div>
+                  <h2 className="text-lg font-semibold tracking-tight text-[var(--theme-text)]">Mission Control</h2>
+                  <p className="mt-0.5 text-sm text-[var(--theme-text)]/50">Modules and system orchestration</p>
+                </div>
+                <button
+                  onClick={() => setIsConsoleOpen(false)}
+                  aria-label="Close"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--theme-text)]/50 transition-colors hover:bg-[var(--theme-text)]/5 hover:text-[var(--theme-text)]"
+                >
+                  <X className="h-4 w-4" />
+                </button>
               </div>
 
-              {/* Grid Menu */}
-              <div className="col-span-8 grid grid-cols-3 gap-4">
+              {/* System summary */}
+              <div className="flex flex-wrap items-center gap-x-8 gap-y-3 border-b border-[var(--theme-text)]/10 px-7 py-5">
+                <SummaryStat icon={<Activity className="h-4 w-4" />} label="Health" value={`${systemHealth}%`} />
+                <SummaryStat icon={<Layers className="h-4 w-4" />} label="Realm" value={realm.name} />
+                <SummaryStat
+                  icon={<Sparkles className="h-4 w-4" />}
+                  label="Vanguard"
+                  value={`v${evolutionLevel}.0 · ${isUniverseStable ? 'Stable' : 'Active'}`}
+                />
+                <div className="ml-auto flex gap-2">
+                  <button
+                    onClick={evolveSystem}
+                    className="flex items-center gap-2 rounded-full bg-[var(--theme-text)]/5 px-4 py-2 text-sm font-medium text-[var(--theme-text)] transition-colors hover:bg-[var(--theme-text)]/10"
+                  >
+                    <Sparkles className="h-4 w-4" /> Evolve
+                  </button>
+                  <button
+                    onClick={restoreSystem}
+                    className="flex items-center gap-2 rounded-full bg-[var(--theme-primary)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${universeState === 'restoring' ? 'animate-spin' : ''}`} /> Restore
+                  </button>
+                </div>
+              </div>
+
+              {/* Module grid */}
+              <div className="grid grid-cols-2 gap-2 p-5 sm:grid-cols-3">
                 {[
-                  { id: 'nexus', icon: <Compass />, label: 'Nexus', color: '#60A5FA' },
-                  { id: 'studio', icon: <Mic />, label: 'Studio', color: '#F87171' },
-                  { id: 'creative', icon: <Zap />, label: 'Creative', color: '#FBBF24' },
-                  { id: 'data', icon: <Database />, label: 'Fusions', color: '#34D399' },
-                  { id: 'universe', icon: <Layers />, label: 'Universe', color: '#A78BFA' },
-                  { id: 'knowledge', icon: <Box />, label: 'Knowledge', color: '#F472B6' },
-                  { id: 'timeline', icon: <Activity />, label: 'Timeline', color: '#FB923C' },
-                  { id: 'media', icon: <Maximize2 />, label: 'Media', color: '#2DD4BF' },
-                  { id: 'settings', icon: <Settings />, label: 'Settings', color: '#94A3B8' },
+                  { id: '', icon: <Compass className="h-5 w-5" />, label: 'Nexus' },
+                  { id: 'studio', icon: <Mic className="h-5 w-5" />, label: 'Studio' },
+                  { id: 'creative-studio', icon: <Zap className="h-5 w-5" />, label: 'Creative' },
+                  { id: 'data-fusion', icon: <Database className="h-5 w-5" />, label: 'Fusions' },
+                  { id: 'workspace-universe', icon: <Layers className="h-5 w-5" />, label: 'Universe' },
+                  { id: 'library', icon: <Box className="h-5 w-5" />, label: 'Knowledge' },
+                  { id: 'continuity', icon: <Activity className="h-5 w-5" />, label: 'Timeline' },
+                  { id: 'media-hub', icon: <Maximize2 className="h-5 w-5" />, label: 'Media' },
+                  { id: 'plugins', icon: <Settings className="h-5 w-5" />, label: 'Settings' },
                 ].map((item) => (
-                  <motion.div
-                    key={item.id}
-                    whileHover={{ y: -5, scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                  <button
+                    key={item.label}
                     onClick={() => {
-                      navigate(`/${item.id === 'nexus' ? '' : item.id}`);
+                      navigate(`/${item.id}`);
                       setIsConsoleOpen(false);
                     }}
-                    className="group cursor-pointer"
+                    className="group flex flex-col items-center gap-3 rounded-2xl border border-transparent px-4 py-6 text-center transition-colors hover:border-[var(--theme-text)]/10 hover:bg-[var(--theme-text)]/[0.04]"
                   >
-                    <Glass blur={24} opacity={0.3} border className="h-40 rounded-[32px] flex flex-col items-center justify-center gap-4 border-white/5 hover:border-white/20 transition-all hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
-                      <div 
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110"
-                        style={{ backgroundColor: `${item.color}10`, color: item.color }}
-                      >
-                        <div className="w-7 h-7 flex items-center justify-center">
-                          {item.icon}
-                        </div>
-                      </div>
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 group-hover:text-white transition-colors">
-                        {item.label}
-                      </span>
-                    </Glass>
-                  </motion.div>
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--theme-text)]/5 text-[var(--theme-text)]/70 transition-colors group-hover:bg-[var(--theme-primary)]/15 group-hover:text-[var(--theme-primary)]">
+                      {item.icon}
+                    </span>
+                    <span className="text-sm font-medium text-[var(--theme-text)]/70 group-hover:text-[var(--theme-text)]">
+                      {item.label}
+                    </span>
+                  </button>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* FLOATING COMMAND DOCK */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2 pointer-events-auto">
-        <Glass blur={30} opacity={0.6} border className="px-6 py-3 rounded-2xl flex items-center gap-3 border-white/10 shadow-2xl">
-           <DockButton 
-             icon={<Mic className="w-5 h-5" />} 
-             label="Voice" 
-             onClick={() => say("กำลังฟังอยู่ครับ บอส...")} 
-           />
-           
-           <div className="w-[1px] h-6 bg-white/5 mx-1" />
-           
-           <DockButton 
-             icon={<Sparkles className="w-5 h-5" />} 
-             label="Evolve" 
-             active={universeState === 'shifting'}
-             onClick={evolveSystem} 
-           />
-           
-           <div className="w-[1px] h-10 bg-white/10 mx-1" />
-           
-           <motion.button 
-             onClick={restoreSystem}
-             whileHover={{ scale: 1.1, rotate: 90 }}
-             whileTap={{ scale: 0.9 }}
-             className="p-4 rounded-2xl bg-[var(--theme-primary)] text-white shadow-[0_0_20px_var(--theme-glow)] transition-transform flex items-center justify-center group relative overflow-hidden"
-           >
-             <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-             <RefreshCw className={`w-6 h-6 relative z-10 ${universeState === 'restoring' ? 'animate-spin' : ''}`} />
-           </motion.button>
-           
-           <div className="w-[1px] h-10 bg-white/10 mx-1" />
-           
-           <DockButton 
-             icon={<Bell className="w-5 h-5" />} 
-             label="Alerts" 
-             onClick={() => navigate('/notifications')} 
-           />
-           
-           <div className="w-[1px] h-6 bg-white/5 mx-1" />
-           
-           <DockButton 
-             icon={<Search className="w-5 h-5" />} 
-             label="Find" 
-             onClick={() => window.dispatchEvent(new CustomEvent('open-universal-search'))} 
-           />
-        </Glass>
-      </div>
     </>
   );
 };
 
-const DockButton: React.FC<{ 
-  icon: React.ReactNode; 
-  label: string; 
+const IconButton: React.FC<{
+  children: React.ReactNode;
+  label: string;
   active?: boolean;
   onClick?: () => void;
-}> = ({ icon, label, active, onClick }) => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+}> = ({ children, label, active, onClick }) => (
+  <button
+    onClick={onClick}
+    aria-label={label}
+    title={label}
+    className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors ${
+      active
+        ? 'bg-[var(--theme-primary)] text-white'
+        : 'text-[var(--theme-text)]/55 hover:bg-[var(--theme-text)]/5 hover:text-[var(--theme-text)]'
+    }`}
+  >
+    {children}
+  </button>
+);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
-  return (
-    <motion.button 
-      onClick={onClick}
-      onMouseMove={handleMouseMove}
-      whileHover={{ y: -8, scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
-      className={`group relative flex flex-col items-center p-3 rounded-xl transition-all duration-300 ${
-        active 
-          ? 'bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border border-[var(--theme-primary)]/20 shadow-[0_0_20px_rgba(var(--theme-primary-rgb),0.2)]' 
-          : 'text-white/40 hover:text-white hover:bg-white/5'
-      }`}
-      style={{
-        '--mouse-x': `${mousePos.x}px`,
-        '--mouse-y': `${mousePos.y}px`,
-      } as any}
-    >
-      <div className="relative z-10">
-        {icon}
-      </div>
-      <span className={`absolute -bottom-8 text-[8px] font-black uppercase tracking-[0.2em] transition-all duration-300 opacity-0 group-hover:opacity-100 whitespace-nowrap ${
-        active ? 'text-[var(--theme-primary)]' : 'text-white/40'
-      }`}>
-        {label}
-      </span>
-      
-      {/* Magnetic Effect Glow */}
-      <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity bg-[radial-gradient(circle_at_var(--mouse-x)_var(--mouse-y),rgba(255,255,255,0.05)_0%,transparent_100%)] pointer-events-none" />
-      <div className="absolute inset-0 rounded-xl border border-white/0 group-hover:border-white/10 transition-colors pointer-events-none" />
-    </motion.button>
-  );
-};
-
-// Internal Typography Helper
-const Heading = ({ size, className, children }: { size: string, className?: string, children: React.ReactNode }) => (
-  <h1 className={className} style={{ fontSize: `${size}px` }}>{children}</h1>
+const SummaryStat: React.FC<{ icon: React.ReactNode; label: string; value: string }> = ({ icon, label, value }) => (
+  <div className="flex items-center gap-2.5">
+    <span className="text-[var(--theme-text)]/40">{icon}</span>
+    <div className="flex flex-col leading-tight">
+      <span className="text-[11px] font-medium text-[var(--theme-text)]/45">{label}</span>
+      <span className="text-sm font-semibold text-[var(--theme-text)]">{value}</span>
+    </div>
+  </div>
 );
 
 export default CommandBridge;
