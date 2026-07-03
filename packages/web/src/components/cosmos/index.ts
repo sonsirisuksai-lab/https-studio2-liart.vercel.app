@@ -15,3 +15,7 @@ export * from './RobinCompanion';
 export * from './StatCard';
 export * from './Timeline';
 export * from './UniversalSearch';
+export * from './AIWorkspace';
+export * from './TimeMachine';
+export * from './DataFusion';
+

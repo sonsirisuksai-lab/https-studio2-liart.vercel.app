@@ -1,24 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRealm } from '@/lib/RealmContext';
+import { Radio, X, Wifi, Database } from 'lucide-react';
 
 type RobotState = 'idle' | 'computing' | 'crisis';
 
 export const DesktopRobot = () => {
   const { realm } = useRealm();
   const [robotState, setRobotState] = useState<RobotState>('idle');
+  const [namiMessage, setNamiMessage] = useState<string>('');
+  const [showNami, setShowNami] = useState<boolean>(false);
+
+  // Markdown Helper
+  const parseMarkdown = (text: string) => {
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={index} className="text-yellow-400 font-extrabold">{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
+  };
+
+  // Trigger Nami Telemetry Alert
+  const triggerNami = (message: string) => {
+    setNamiMessage(message);
+    setShowNami(true);
+    // Dismiss automatically after 7 seconds unless it's a crisis
+    if (!message.includes('CRITICAL')) {
+      const timer = setTimeout(() => {
+        setShowNami(false);
+      }, 7000);
+      return () => clearTimeout(timer);
+    }
+  };
 
   // WebSocket / CrewEngine mock listener
   useEffect(() => {
     const handleEvent = (e: Event) => {
       const customEvent = e as CustomEvent;
       const type = customEvent.type;
+      
       if (type === 'agent:thought' || type === 'agent:dispatch_start') {
         setRobotState('computing');
+        triggerNami("🛰️ **TELEMETRY SEQUENCE ACTIVE!** Shipwright and Navigator engines synced. Zoro is training on deck; Franky is recalculating thermal core capacity. Speed: **14.5 knots**.");
       } else if (type === 'agent:error' || type === 'system:mitigation_active') {
         setRobotState('crisis');
+        triggerNami("🚨 **TOKEN BUDGET CRITICAL!** Emergency recovery activated. Keep your hands off the core parameters, Captain! Zoro, watch the security perimeter!");
       } else if (type === 'agent:idle') {
         setRobotState('idle');
+      } else if (type === 'system:shortcut_focus') {
+        const detail = customEvent.detail || {};
+        triggerNami(`⚡ **IOS SHORTCUT TRIGGERED!** External automation handshake validated successfully. Focus realm shifted to **${(detail.mode || 'work').toUpperCase()}** environment. Cargo routes verified! 💰`);
+      } else if (type === 'cosmos-nfc-scan') {
+        const detail = customEvent.detail || {};
+        const tag = detail.tag || {};
+        triggerNami(`📟 **NFC PHYSICAL COUPLING ENGAGED!** Scanned tag ID [**${tag.id}**] successfully matching **${tag.focusMode}**. Initiating instantaneous system state synchronization! 🍊`);
       }
     };
 
@@ -27,6 +64,13 @@ export const DesktopRobot = () => {
     window.addEventListener('agent:error', handleEvent);
     window.addEventListener('system:mitigation_active', handleEvent);
     window.addEventListener('agent:idle', handleEvent);
+    window.addEventListener('system:shortcut_focus', handleEvent);
+    window.addEventListener('cosmos-nfc-scan', handleEvent);
+
+    // Initial warm welcome from Nami
+    const welcomeTimer = setTimeout(() => {
+      triggerNami("🍊 **NAMI NAVIGATOR ENGINE ONLINE!** WebSocket packet logs linked. Current treasury cache: **+145,200 ฿**. No marine radar pings detected. Standing by for commands, Boss! ⚓");
+    }, 2000);
 
     return () => {
       window.removeEventListener('agent:thought', handleEvent);
@@ -34,6 +78,9 @@ export const DesktopRobot = () => {
       window.removeEventListener('agent:error', handleEvent);
       window.removeEventListener('system:mitigation_active', handleEvent);
       window.removeEventListener('agent:idle', handleEvent);
+      window.removeEventListener('system:shortcut_focus', handleEvent);
+      window.removeEventListener('cosmos-nfc-scan', handleEvent);
+      clearTimeout(welcomeTimer);
     };
   }, []);
 
@@ -138,16 +185,63 @@ export const DesktopRobot = () => {
   };
 
   return (
-    <div className="fixed bottom-12 right-12 z-[150] pointer-events-none flex flex-col items-center justify-end w-32 h-48">
+    <div className="fixed bottom-12 right-12 z-[150] pointer-events-none flex items-end justify-end gap-4">
+      {/* Nami Floating Telemetry Speech Bubble */}
+      <AnimatePresence>
+        {showNami && namiMessage && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85, x: 20 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.85, x: 20 }}
+            className="w-80 rounded-2xl bg-black/90 backdrop-blur-xl border border-[#ff9500]/30 shadow-2xl p-4 pointer-events-auto flex flex-col gap-2 relative overflow-hidden"
+          >
+            {/* Ambient orange glow backing Nami */}
+            <div className="absolute top-0 left-0 w-32 h-32 bg-[#ff9500]/10 rounded-full blur-2xl -z-10 pointer-events-none" />
+            
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+              <div className="flex items-center gap-1.5 text-[#ff9500]">
+                <Radio className="w-3.5 h-3.5 animate-pulse" />
+                <span className="text-[10px] font-black uppercase font-mono tracking-wider">NAMI NAVIGATION TELEMETRY</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[8px] font-mono bg-[#ff9500]/15 text-[#ff9500] px-1.5 py-0.5 rounded flex items-center gap-1">
+                  <Wifi className="w-2.5 h-2.5" /> STREAMING
+                </span>
+                <button 
+                  onClick={() => setShowNami(false)}
+                  className="text-white/40 hover:text-white transition-colors cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            </div>
+
+            {/* Message Body */}
+            <div className="text-xs text-white/95 font-mono leading-relaxed select-text">
+              {parseMarkdown(namiMessage)}
+            </div>
+
+            {/* Bottom Telemetry Metrics */}
+            <div className="flex items-center justify-between pt-1 text-[8px] font-mono text-white/40 border-t border-white/5">
+              <span className="flex items-center gap-1"><Database className="w-2.5 h-2.5 text-cyan-400" /> B/W: 420 Mbps</span>
+              <span>WS PORT: 3000</span>
+              <span className="text-emerald-400 animate-pulse">● CONNECTED</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Container to handle vertical elevation drop during crisis */}
       <motion.div
         animate={{
           y: isCrisis ? 30 : 0
         }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-        className="relative flex items-center justify-center w-full h-full pointer-events-auto cursor-pointer"
+        className="relative flex items-center justify-center w-20 h-20 pointer-events-auto cursor-pointer shrink-0"
         onClick={() => {
-           setRobotState(s => s === 'idle' ? 'computing' : s === 'computing' ? 'crisis' : 'idle');
+          setRobotState(s => s === 'idle' ? 'computing' : s === 'computing' ? 'crisis' : 'idle');
+          triggerNami("🍊 **NAMI NAVIGATOR:** Telemetry logs active! Coordinates synced with Sunny's navigation chart. Fuel is **98.4%**. Treasury surplus: **+24,500 ฿**. No Navy ships spotted! 💰");
         }}
       >
         <motion.div
@@ -162,7 +256,7 @@ export const DesktopRobot = () => {
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0 }}
-                className="absolute inset-[-40px] rounded-full flex items-center justify-center pointer-events-none"
+                className="absolute inset-[-15px] rounded-full flex items-center justify-center pointer-events-none"
               >
                 <motion.div
                   animate={{ rotate: 360, scale: [1, 1.1, 1] }}
@@ -229,3 +323,4 @@ export const DesktopRobot = () => {
     </div>
   );
 };
+

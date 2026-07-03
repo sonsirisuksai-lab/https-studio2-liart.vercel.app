@@ -9,6 +9,14 @@ import { geminiClient } from '@/lib/ai/gemini';
 import { NFCEngine } from '@cosmos/core';
 import Matter from 'matter-js';
 
+import { Tuner } from './Tuner';
+import { MIDIExport } from './MIDIExport';
+import { Analyzer } from './Analyzer';
+import { ChordGenerator } from './ChordGenerator';
+import { Composer } from './Composer';
+import { GuitarTrainer } from './GuitarTrainer';
+import { Heading } from '@/components/aether/Typography';
+
 // Entity type interfaces
 interface Inspiration {
   id: string;
@@ -66,7 +74,8 @@ const getStableRandomMapping = (items: string[]) => {
 
 export function StudioPro() {
   const { playClick, playHover, playFlip, playOpen } = useSound();
-  const [activeTab, setActiveTab] = useState<'inspiration' | 'proposal' | 'roadmap' | 'sandbox'>('inspiration');
+  const [activeTab, setActiveTab] = useState<'inspiration' | 'proposal' | 'roadmap' | 'sandbox' | 'studio_pro_features'>('inspiration');
+  const [activeSubFeature, setActiveSubFeature] = useState<'tuner' | 'midi' | 'analyzer' | 'chords' | 'composer' | 'trainer'>('tuner');
   const [inspirations, setInspirations] = useState<Inspiration[]>([]);
   const [proposals, setProposals] = useState<Proposal[]>([]);
   
@@ -696,9 +705,11 @@ ${selectedProp.metadata.userStory}
         </div>
 
         {/* Tab Switcher Actions with custom hover/sounds */}
-        <div className="flex flex-wrap gap-2 mt-6 md:mt-0 bg-black/40 p-1.5 rounded-xl border border-white/5">
-          {(['inspiration', 'proposal', 'roadmap', 'sandbox'] as const).map(tab => (
-            <button
+        <div className="flex flex-wrap gap-2 mt-6 md:mt-0 bg-[var(--theme-surface)] p-1.5 rounded-xl border border-[var(--theme-border)]">
+          {(['inspiration', 'proposal', 'roadmap', 'sandbox', 'studio_pro_features'] as const).map(tab => (
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               key={tab}
               onClick={() => {
                 playClick();
@@ -707,15 +718,16 @@ ${selectedProp.metadata.userStory}
               onMouseEnter={playHover}
               className={`px-4 py-2.5 text-xs font-bold rounded-lg uppercase tracking-wider transition-all duration-300 ${
                 activeTab === tab
-                  ? 'bg-emerald-500 text-black font-extrabold shadow-[0_0_20px_rgba(16,185,129,0.35)]'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  ? 'bg-[var(--theme-primary)] text-white font-extrabold shadow-[0_0_20px_var(--theme-glow)]'
+                  : 'text-[var(--theme-text-secondary)] hover:text-[var(--theme-text)] hover:bg-[var(--theme-glass)]'
               }`}
             >
               {tab === 'inspiration' && '🌌 Inspiration Deck'}
               {tab === 'proposal' && '🛠️ System Proposals'}
               {tab === 'roadmap' && '🗺️ VNext Roadmap'}
               {tab === 'sandbox' && '💻 Schema Sandbox'}
-            </button>
+              {tab === 'studio_pro_features' && '🎵 Studio Pro'}
+            </motion.button>
           ))}
         </div>
       </header>
@@ -1177,6 +1189,77 @@ ${selectedProp.metadata.userStory}
                       {generatedSql}
                     </pre>
                   </div>
+                </div>
+              </Glass>
+            </div>
+          )}
+
+          {activeTab === 'studio_pro_features' && (
+            <div className="space-y-6">
+              <Glass border opacity={0.1} className="p-6 border-white/5 relative overflow-hidden rounded-2xl">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+                
+                <div className="border-b border-white/5 pb-4 mb-6">
+                  <span className="text-xs font-black text-amber-400 tracking-widest uppercase block mb-1">
+                    STUDIO PRO WORKSPACE // PHASE 3
+                  </span>
+                  <Heading size="32" className="text-white font-extrabold">
+                    17 Music Features (Studio Pro)
+                  </Heading>
+                  <p className="text-xs text-gray-400 mt-1">
+                    เครื่องมือดนตรี AI สำหรับคัดลอก ค้นหา และวิเคราะห์ระดับสูง เพื่อตัดแต่งเสียงได้ดั่งใจ
+                  </p>
+                </div>
+
+                {/* Sub Features grid selector */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 mb-8">
+                  {[
+                    { id: 'tuner', label: '🎸 Guitar Tuner', desc: 'ตั้งสายกีต้าร์ความแม่นยำสูง' },
+                    { id: 'midi', label: '🎹 MIDI Export', desc: 'ส่งออกรูปแบบเป็นโน้ต MIDI' },
+                    { id: 'analyzer', label: '📊 Audio Analyzer', desc: 'วิเคราะห์ BPM/Key/Chords' },
+                    { id: 'chords', label: '🎵 Chord Generator', desc: 'ถอดคอร์ดเนื้อเพลงด้วย AI' },
+                    { id: 'composer', label: '✨ AI Composer', desc: 'แต่งเพลงเต็มรูปแบบด้วยสัญชาตญาณ' },
+                    { id: 'trainer', label: '🎥 Guitar Trainer', desc: 'ฝึกนิ้วกีต้าร์ผ่านกล้องวิดีโอ' }
+                  ].map((feat) => (
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      key={feat.id}
+                      onClick={() => {
+                        playClick();
+                        setActiveSubFeature(feat.id as any);
+                        
+                        // Update Zoro advice depending on tool selected
+                        const adviceMap = {
+                          tuner: 'เครื่องตั้งสายแม่นยำระดับดาบโคโตสึ บอสดีดสายกีต้าร์มาเลย ฉันฟังจับคลื่นเสียงความถี่ได้ละเอียดยิบ!',
+                          midi: 'แปลงจังหวะดิบให้กลายเป็นสเกล MIDI ทรงพลัง ดั่งคลื่นกระแทก 36 ปอนด์ที่ไร้จุดบกพร่อง!',
+                          analyzer: 'อัพโหลดไฟล์เพลงสิวะบอส ฉันจะสับบีต วิเคราะห์คีย์เพลง ถอดเนื้อโครงสร้างยับเยินให้เป็นเศษเล็กเศษน้อย!',
+                          chords: 'กรอกชื่อเพลงที่อยากได้คอร์ดสิบอส! คอร์ดพวงเนื้อร้องคู่แท็บ จะสับคอร์ดให้เฉียบคมดั่งวิชาสามดาบ!',
+                          composer: 'ให้ฉันประพันธ์เพลงให้รึ? ฉันไม่ได้เชี่ยวชาญเครื่องดนตรี แต่สติปัญญากระบวนท่าระดับ AI Composer จะแต่งเพลงที่บอสต้องทึ่ง!',
+                          trainer: 'เปิดกล้องฝึกกีต้าร์สิ! วางนิ้วให้ตรงเฟรต แล้วกล้อง AI ของฉันจะแสกนจับทุกสัมผัส ปัดนิ้วพลาดโดนฟันแน่บอส!'
+                        };
+                        setZoroAdvice(adviceMap[feat.id as keyof typeof adviceMap]);
+                      }}
+                      className={`p-4 rounded-xl text-left border transition-all duration-300 ${
+                        activeSubFeature === feat.id
+                          ? 'bg-[var(--theme-primary)]/10 text-[var(--theme-primary)] border-[var(--theme-primary)]/40 shadow-[0_0_15px_var(--theme-glow)]'
+                          : 'bg-[var(--theme-glass)] text-[var(--theme-text-secondary)] border-[var(--theme-border)] hover:border-[var(--theme-primary)]/20'
+                      }`}
+                    >
+                      <div className="text-xs font-black uppercase mb-1">{feat.label}</div>
+                      <div className="text-[10px] opacity-70 leading-snug">{feat.desc}</div>
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* Sub feature renderer */}
+                <div className="border-t border-white/5 pt-6">
+                  {activeSubFeature === 'tuner' && <Tuner />}
+                  {activeSubFeature === 'midi' && <MIDIExport />}
+                  {activeSubFeature === 'analyzer' && <Analyzer />}
+                  {activeSubFeature === 'chords' && <ChordGenerator />}
+                  {activeSubFeature === 'composer' && <Composer />}
+                  {activeSubFeature === 'trainer' && <GuitarTrainer />}
                 </div>
               </Glass>
             </div>

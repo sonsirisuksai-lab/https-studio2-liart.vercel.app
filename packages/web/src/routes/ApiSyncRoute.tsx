@@ -5,11 +5,13 @@ import { motion } from 'framer-motion';
 import { NFCEngine, NFC_CHIPS_MAPPING } from '@cosmos/core';
 import { useSound } from '@/hooks/useSound';
 import { Glass } from '@/components/aether/Glass';
+import { useRealm } from '@/lib/RealmContext';
 
-export function ApiSyncRoute({ type }: { type: 'focus' | 'nfc' }) {
+export function ApiSyncRoute({ type }: { type: 'focus' | 'nfc' | 'shortcut' }) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { playOpen, playClick } = useSound();
+  const { setRealm } = useRealm();
   const [status, setStatus] = useState<'syncing' | 'success' | 'error'>('syncing');
   const [syncedMode, setSyncedMode] = useState<string>('');
   const [syncedColor, setSyncedColor] = useState<string>('#8B5CF6');
@@ -17,6 +19,57 @@ export function ApiSyncRoute({ type }: { type: 'focus' | 'nfc' }) {
   useEffect(() => {
     // Play system opening audio indicator
     playOpen();
+
+    if (type === 'shortcut') {
+      const modeParam = searchParams.get('mode') || searchParams.get('focus') || '';
+      const tokenParam = searchParams.get('token') || searchParams.get('automation_token') || '';
+      
+      const cleanMode = modeParam.trim().toLowerCase();
+      let matchedRealmId: 'cyber-neon' | 'ironman-nano' | 'venom-liquid' | 'retro-tape' | null = null;
+      let matchedColor = '#8B5CF6';
+      let matchedName = '';
+
+      if (cleanMode.includes('cyber') || cleanMode === 'neon') {
+        matchedRealmId = 'cyber-neon';
+        matchedColor = '#00f0ff';
+        matchedName = '🔌 CYBER-NEON LOGISTICS';
+      } else if (cleanMode.includes('ironman') || cleanMode === 'nano' || cleanMode === 'iron') {
+        matchedRealmId = 'ironman-nano';
+        matchedColor = '#ef4444';
+        matchedName = '🛡️ IRONMAN-NANO GRID';
+      } else if (cleanMode.includes('venom') || cleanMode === 'liquid') {
+        matchedRealmId = 'venom-liquid';
+        matchedColor = '#a3e635';
+        matchedName = '🦠 VENOM-LIQUID BIO-CORE';
+      } else if (cleanMode.includes('retro') || cleanMode === 'tape') {
+        matchedRealmId = 'retro-tape';
+        matchedColor = '#22c55e';
+        matchedName = '📼 RETRO-TAPE DECK';
+      }
+
+      if (matchedRealmId) {
+        setSyncedMode(matchedName);
+        setSyncedColor(matchedColor);
+        setStatus('success');
+        setRealm(matchedRealmId);
+        playClick();
+
+        // Broadcast local notification for Nami & telemetry logging
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('system:shortcut_focus', {
+            detail: { mode: matchedRealmId, token: tokenParam, success: true }
+          }));
+        }
+
+        const timer = setTimeout(() => {
+          navigate('/');
+        }, 1800);
+        return () => clearTimeout(timer);
+      } else {
+        setStatus('error');
+      }
+      return;
+    }
 
     const paramValue = type === 'focus' 
       ? searchParams.get('mode') || searchParams.get('focus')
@@ -47,7 +100,7 @@ export function ApiSyncRoute({ type }: { type: 'focus' | 'nfc' }) {
     } else {
       setStatus('error');
     }
-  }, [type, searchParams, navigate, playOpen, playClick]);
+  }, [type, searchParams, navigate, playOpen, playClick, setRealm]);
 
   return (
     <div className="min-h-screen bg-[#050505] text-white flex flex-col items-center justify-center p-4 relative overflow-hidden select-none">

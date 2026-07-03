@@ -119,6 +119,7 @@ function AppContent() {
           <Route path="archive" element={<ArchivePage />} />
           <Route path="logistics" element={<LogisticsConsole />} />
           <Route path="personal-space" element={<PersonalSpacePage />} />
+          <Route path="api/shortcuts/focus-trigger" element={<ApiSyncRoute type="shortcut" />} />
           <Route path="api/focus-mode" element={<ApiSyncRoute type="focus" />} />
           <Route path="api/nfc-tap" element={<ApiSyncRoute type="nfc" />} />
           <Route path="*" element={<NotFound />} />
