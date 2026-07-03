@@ -3,9 +3,8 @@ import { Spring } from "framer-motion";
 
 export const COSMOS_SPRING: Spring = {
   type: "spring",
-  stiffness: 200,
-  damping: 25,
-  mass: 1,
+  stiffness: 280,
+  damping: 28,
 };
 
 export const MAGNETIC_SPRING: Spring = {

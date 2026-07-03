@@ -27,11 +27,11 @@ export function NavBar() {
   const location = useLocation();
 
   return (
-    <nav className="hidden md:flex items-center justify-center p-[var(--space-4)] z-[90] pointer-events-auto">
+    <nav className="fixed top-0 left-0 right-0 z-[100] flex justify-center pt-[var(--space-6)] pointer-events-none">
       <Glass 
         blur={40} 
         opacity={0.8} 
-        className="flex gap-[var(--space-1)] p-[var(--space-1)] rounded-full border border-[var(--theme-border)] shadow-2xl"
+        className="flex gap-[var(--space-1)] p-[var(--space-1)] rounded-full border border-[var(--theme-border)] shadow-2xl bg-[var(--theme-surface)]/80 backdrop-blur-md pointer-events-auto"
       >
         {TABS.map((tab) => {
           const Icon = tab.icon;
@@ -43,18 +43,17 @@ export function NavBar() {
               key={tab.id}
               to={tab.path}
               className={({ isActive: linkActive }) => cn(
-                "relative flex items-center gap-[var(--space-2)] px-[var(--space-4)] py-[var(--space-2)] rounded-xl text-xs font-bold uppercase tracking-wider transition-all z-10",
+                "relative flex items-center justify-center h-11 w-11 rounded-full transition-all z-10",
                 isActive 
                   ? "text-[var(--theme-primary)]" 
-                  : "text-[var(--theme-text-secondary)] hover:text-[var(--theme-text)] hover:bg-[var(--theme-surface)]/20"
+                  : "text-[var(--theme-text-secondary)] hover:text-[var(--theme-text)] hover:bg-[var(--theme-surface)]/40"
               )}
             >
-              <Icon className="w-4 h-4" />
-              <span>{tab.label}</span>
+              <Icon className="w-6 h-6" />
               {isActive && (
                 <motion.div
                   layoutId="activeNavBarTab"
-                  className="absolute inset-0 bg-[var(--theme-primary)]/10 rounded-xl border border-[var(--theme-primary)]/20 -z-10"
+                  className="absolute inset-0 bg-[var(--theme-primary)]/20 rounded-full -z-10"
                   transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                 />
               )}

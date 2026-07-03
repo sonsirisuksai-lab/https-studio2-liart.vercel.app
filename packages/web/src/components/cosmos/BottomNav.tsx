@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Glass } from '@/components/aether/Glass';
 import { cn } from '@/lib/utils';
 import { Compass, Briefcase, Brain, Disc, Settings } from 'lucide-react';
+import { COSMOS_SPRING } from '@/lib/motion';
 
 interface TabItem {
   id: string;
@@ -25,7 +26,7 @@ export function BottomNav() {
   const location = useLocation();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[120] p-[var(--space-3)] md:hidden pointer-events-none">
+    <div className="fixed bottom-0 left-0 right-0 z-[120] p-[var(--space-3)] pb-[env(safe-area-inset-bottom)] md:hidden pointer-events-none">
       <Glass
         blur={40}
         opacity={0.8}
@@ -53,7 +54,7 @@ export function BottomNav() {
                 <motion.div
                   layoutId="activeBottomNavTab"
                   className="absolute inset-0 bg-[var(--theme-primary)]/10 rounded-xl -z-10"
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  transition={COSMOS_SPRING}
                 />
               )}
             </NavLink>

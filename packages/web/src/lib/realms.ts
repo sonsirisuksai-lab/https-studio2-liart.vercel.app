@@ -4,7 +4,8 @@ export type RealmId =
   | 'cyber-neon' 
   | 'ironman-nano' 
   | 'venom-liquid' 
-  | 'retro-tape';
+  | 'retro-tape'
+  | 'minimal-glass';
 
 export interface RealmMaterial {
   glass: string;

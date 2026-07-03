@@ -88,6 +88,16 @@ class AudioEngine {
           osc.start(now);
           osc.stop(now + 0.3);
           break;
+        case 'minimal-glass':
+          // Airy wind chime
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.linearRampToValueAtTime(1200, now + 0.5);
+          gain.gain.setValueAtTime(0.03, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+          osc.start(now);
+          osc.stop(now + 0.5);
+          break;
         default:
           osc.type = 'sine';
           osc.frequency.setValueAtTime(440, now);

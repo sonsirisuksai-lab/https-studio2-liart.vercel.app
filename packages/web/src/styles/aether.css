@@ -372,6 +372,12 @@
   --icon-stroke-width: 1.5px;
 }
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 [data-theme="venom"] {
   --theme-background: #0a0a0a;
   --theme-surface: rgba(20, 20, 25, 0.8);
@@ -388,8 +394,18 @@
   --theme-border: #ffd700;
   --theme-text: #ff0000;
   --radius-card: 4px;
-  --shadow-md: 5px 5px 0px #000, 10px 10px 0px #333;
-  --theme-glow: 0 0 5px rgba(255, 215, 0, 0.5);
+  --shadow-md: 5px 5px 0px #8b0000, 10px 10px 0px #333;
+  --theme-glow: 0 0 10px rgba(255, 0, 0, 0.6);
+}
+
+[data-theme="retro"] {
+  --theme-background: #0a0a0a;
+  --theme-surface: #1a1a1a;
+  --theme-border: #f59e0b;
+  --theme-text: #f59e0b;
+  --radius-card: 4px;
+  --shadow-md: 2px 2px 0px #f59e0b;
+  --theme-glow: 0 0 10px rgba(245, 158, 11, 0.5);
 }
 
 [data-theme="cyber-neon"] {
@@ -398,8 +414,18 @@
   --theme-border: #00f2ff;
   --theme-text: #00f2ff;
   --radius-card: 0px;
-  --shadow-md: 0 0 10px #00f2ff, inset 0 0 5px #00f2ff;
+  --shadow-md: 0 0 15px rgba(0, 242, 255, 0.5), inset 0 0 5px rgba(0, 242, 255, 0.3);
   --theme-glow: 0 0 20px #00f2ff;
+}
+
+[data-theme="minimal-glass"] {
+  --theme-background: #f8fafc;
+  --theme-surface: rgba(255, 255, 255, 0.6);
+  --theme-border: rgba(200, 200, 200, 0.5);
+  --theme-text: #1e293b;
+  --radius-card: 2rem;
+  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.05);
+  --theme-glow: none;
 }
 
 [data-theme="void"] {
