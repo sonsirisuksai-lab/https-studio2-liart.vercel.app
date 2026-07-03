@@ -67,9 +67,11 @@ const Login = React.lazy(() => import('./routes/login'));
 const Register = React.lazy(() => import('./routes/register'));
 
 import { initSentry } from './lib/sentry';
+import { initAnalytics } from './lib/analytics';
 import { ApiSyncRoute } from './routes/ApiSyncRoute';
 
 initSentry();
+initAnalytics();
 
 import './index.css';
 

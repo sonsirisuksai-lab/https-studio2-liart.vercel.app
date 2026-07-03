@@ -1,75 +1,57 @@
-# 🌌 COSMOS OS v5.0
+# 🌌 COSMOS OS v7.0.0
 
 **Every Information Has A Physical Form.**
 
-COSMOS is a Personal Cognitive Operating System that transforms digital data into physical objects (Vinyl, Cassette, Soul Cards, DNA, Brain, etc.). It's not a music player or an AI app — it's a Digital Museum where you explore, collect, and interact with your data as physical objects.
+COSMOS is a Personal Cognitive Operating System that transforms digital data into physical objects. It's not a music player or an AI app — it's a Digital Museum where you explore, collect, and interact with your data as physical objects.
 
----
+## Features
 
-## 🚀 Quick Start Guide
+- ✅ 7 Realms (CORE, WORK, THINK, STUDIO, LIFE, SIGNAL, MONEY)
+- ✅ 13 Physical Objects (Vinyl, Cassette, Soul Card, DNA, Book, Printer, Typewriter, Notebook, Folder, CD, Tape, MiniDisc, Radio)
+- ✅ 11 Themes + 5 Presets + Real-time Customizer
+- ✅ 17 Music Features (Analyzer, Tuner, Composer, MIDI Export, etc.)
+- ✅ 10 AI Agents (Luffy, Zoro, Nami, Robin, Franky, Chopper, Brook, Jinbe, Sanji, Usopp)
+- ✅ Authentication + Cloud Sync
+- ✅ Export/Import Data
+- ✅ Global Search
+- ✅ PWA Support
+- ✅ Fully Responsive
 
-To get up and running across the entire COSMOS ecosystem:
+## Quick Start
 
 ```bash
-# Install all workspace dependencies
-npm install
+# Clone the repository
+git clone https://github.com/your-username/cosmos-os.git
+cd cosmos-os
 
-# Run Web App development server on port 3000
-npm run dev
+# Install dependencies
+pnpm install
 
-# Run Mobile App (Expo development server)
-npm run dev:mobile
+# Copy environment variables
+cp .env.example .env
 
-# Run Desktop Client (Tauri dev mode)
-npm run dev:desktop
+# Start development server
+pnpm dev:web
+
+# Open http://localhost:3000
 ```
 
----
+## Documentation
 
-## 📱 Platforms
+· User Guide
+· Developer Guide
+· API Reference
+· Deployment Guide
 
-### 🌐 1. Web App (`@cosmos/web`)
-- **Technology**: React 19 + Vite 6 + Tailwind CSS v4 + Framer Motion
-- **Features**: Complete visual dashboard, 11 themes, real-time customizations, layout editor, audio sequencer, wellness tracking.
-- **Vercel & Netlify Deployment**: Pre-configured and optimized out-of-the-box.
+## Tech Stack
 
-### 📱 2. Mobile Client (`@cosmos/mobile`)
-- **Technology**: React Native + Expo + NativeWind
-- **Features**: Touch-optimized interface, haptic feedback, local storage caching, seamless synchronization.
+· React 19 + TypeScript
+· Vite 6 + TanStack Start
+· Tailwind CSS v4
+· Framer Motion
+· Supabase + Dexie (IndexedDB)
+· Gemini + Claude AI
 
-### 💻 3. Desktop Client (`@cosmos/desktop`)
-- **Technology**: Rust + Tauri 2 + React 19
-- **Features**: Ultra-lightweight native builds, hardware acceleration, full window state integration.
+## License
 
----
-
-## 🎨 Design System & Realms
-
-COSMOS OS divides digital existence into **7 Realms** and supports **11 Themes** out-of-the-box:
-
-- **7 Realms**: CORE, WORK, THINK, STUDIO, LIFE, SIGNAL, MONEY
-- **11 Themes**: Aether, Lunar, Aurora, Forest, Retro, Cosmic, Minimal, Nebula, Galaxy, Studio Pro, Synthwave.
-
----
-
-## 📸 Screenshots
-
-| Realm Dashboard | Theme Switcher |
-| :---: | :---: |
-| ![Dashboard Placeholder](https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80) | ![Theme customizer Placeholder](https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=600&q=80) |
-
----
-
-## 📚 Documentation
-
-Detailed architecture, deployment, and API references are available in the repository:
-
-- 📖 [API Reference](./docs/API.md) — Dynamic endpoint and schema documentation
-- ⚙️ [Deployment Guide](./docs/DEPLOYMENT.md) — Comprehensive guide to launching COSMOS OS on Vercel, Netlify, EAS, and Tauri
-- 📝 [Changelog](./CHANGELOG.md) — Features, performance optimizations, and changes log
-
----
-
-## ⚖️ License
-
-MIT License. Designed and crafted with love by the COSMOS OS Architects.
+MIT

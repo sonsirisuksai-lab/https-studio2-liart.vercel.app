@@ -18,6 +18,8 @@ import { UniversalSearch } from "@/components/cosmos/UniversalSearch";
 import { ThemeSelector } from "@/components/cosmos/ThemeSelector";
 import { UltimateCaptureSuite } from "@/components/cosmos/UltimateCaptureSuite";
 import { RealmNavigationHUD } from "@/components/cosmos/RealmNavigationHUD";
+import { NavBar, BottomNav, Breadcrumb } from "@/components/cosmos";
+
 
 const layoutSpring = {
   type: "spring",
@@ -174,7 +176,14 @@ export function Layout() {
         )}
       </AnimatePresence>
 
-      <main className="relative z-10 pt-28 pb-32">
+      {/* GLOBAL NAVIGATION */}
+      <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] pointer-events-none">
+        <NavBar />
+      </div>
+      <BottomNav />
+
+      <main className="relative z-10 pt-40 pb-32 max-w-7xl mx-auto px-4 md:px-8">
+        <Breadcrumb />
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
@@ -188,6 +197,7 @@ export function Layout() {
           </motion.div>
         </AnimatePresence>
       </main>
+
 
       <WindowManager />
     </div>
