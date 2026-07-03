@@ -27,11 +27,11 @@ export function NavBar() {
   const location = useLocation();
 
   return (
-    <nav className="hidden md:flex items-center justify-center p-[var(--space-2)] z-[90] pointer-events-auto">
+    <nav className="hidden md:flex items-center justify-center p-[var(--space-4)] z-[90] pointer-events-auto">
       <Glass 
-        blur={24} 
-        opacity={0.4} 
-        className="flex gap-[var(--space-1)] p-[var(--space-1.5)] rounded-2xl border border-[var(--theme-border)] shadow-xl"
+        blur={40} 
+        opacity={0.8} 
+        className="flex gap-[var(--space-1)] p-[var(--space-1)] rounded-full border border-[var(--theme-border)] shadow-2xl"
       >
         {TABS.map((tab) => {
           const Icon = tab.icon;

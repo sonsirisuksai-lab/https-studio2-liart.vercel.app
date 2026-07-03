@@ -27,9 +27,9 @@ export function BottomNav() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[120] p-[var(--space-3)] md:hidden pointer-events-none">
       <Glass
-        blur={30}
-        opacity={0.6}
-        className="max-w-lg mx-auto flex justify-around p-[var(--space-2)] rounded-2xl border border-[var(--theme-border)] shadow-2xl pointer-events-auto"
+        blur={40}
+        opacity={0.8}
+        className="max-w-lg mx-auto flex justify-between items-center px-[var(--space-4)] py-[var(--space-2)] rounded-full border border-[var(--theme-border)] shadow-2xl pointer-events-auto"
       >
         {TABS.map((tab) => {
           const Icon = tab.icon;
