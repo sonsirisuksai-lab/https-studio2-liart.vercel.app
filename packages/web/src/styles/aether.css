@@ -338,10 +338,10 @@
   --theme-background: #FFFFFF;
   --theme-surface: #FAFAFA;
   --theme-text: #000000;
-  --theme-text-secondary: #666666;
-  --theme-text-tertiary: #999999;
-  --glass-rgb: 250, 250, 250;
-  --glass: #FAFAFA;
+  --theme-text-secondary: #444444;
+  --theme-text-tertiary: #888888;
+  --glass-rgb: 255, 255, 255;
+  --glass: rgba(255, 255, 255, 0.95);
   --glass-border: #E5E5E5;
   --theme-glow: transparent;
   --theme-border: #E5E5E5;
@@ -357,8 +357,8 @@
   --radius-card: 0px;
   --radius-input: 0px;
 
-  --padding-card: 0.75rem;
-  --padding-button-x: 0.75rem;
+  --padding-card: 1rem;
+  --padding-button-x: 1rem;
   --padding-button-y: 0.5rem;
 
   --shadow-sm: none;
@@ -366,8 +366,50 @@
   --shadow-lg: none;
   --shadow-glow: none;
 
-  --transition-speed: 0ms;
-  --transition-ease: linear;
+  --transition-speed: 200ms;
+  --transition-ease: ease;
+
+  --icon-stroke-width: 1.5px;
+}
+
+[data-theme="glass"] {
+  --theme-primary: #FFFFFF;
+  --theme-primary-rgb: 255, 255, 255;
+  --theme-secondary: rgba(255, 255, 255, 0.7);
+  --theme-accent: #FFFFFF;
+  --theme-background: #050505;
+  --theme-surface: rgba(255, 255, 255, 0.05);
+  --theme-text: #FFFFFF;
+  --theme-text-secondary: rgba(255, 255, 255, 0.7);
+  --theme-text-tertiary: rgba(255, 255, 255, 0.4);
+  --glass-rgb: 255, 255, 255;
+  --glass: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --theme-glow: rgba(255, 255, 255, 0.05);
+  --theme-border: rgba(255, 255, 255, 0.1);
+
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-weight-base: 300;
+  --font-weight-heading: 400;
+  --tracking-base: 0.02em;
+  --tracking-heading: 0.02em;
+
+  --radius-button: 1rem;
+  --radius-card: 1.5rem;
+  --radius-input: 1rem;
+
+  --padding-card: 2rem;
+  --padding-button-x: 1.5rem;
+  --padding-button-y: 0.75rem;
+
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 20px rgba(255, 255, 255, 0.05);
+
+  --transition-speed: 400ms;
+  --transition-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   --icon-stroke-width: 1px;
 }
