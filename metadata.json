@@ -1,8 +1,0 @@
-{
-  "name": "COSMOS AI Workspace",
-  "description": "Multi-agent output aggregator, refiner, and synthesizer with intelligent AI Merge and Markdown exporting.",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}

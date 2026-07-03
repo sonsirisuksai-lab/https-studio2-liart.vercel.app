@@ -1,0 +1,476 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.2.0
+  description: COSMOS — Straw Hat AI Crew Agentic OS API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: cosmos
+    description: COSMOS system status
+  - name: missions
+    description: Mission management
+  - name: agents
+    description: Agent communication and dispatch
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /cosmos/status:
+    get:
+      operationId: getCosmosStatus
+      tags: [cosmos]
+      summary: COSMOS system status
+      description: Single endpoint for the Captain Dashboard — returns active mission, progress, and system resonance
+      responses:
+        "200":
+          description: COSMOS status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CosmosStatus"
+
+  /missions/active:
+    get:
+      operationId: getActiveMission
+      tags: [missions]
+      summary: Get active mission
+      description: Returns the current active mission in Captain Dashboard format
+      responses:
+        "200":
+          description: Active mission
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MissionSnapshot"
+    patch:
+      operationId: updateActiveMission
+      tags: [missions]
+      summary: Update active mission
+      description: Update mission progress, status, or system resonance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MissionUpdate"
+      responses:
+        "200":
+          description: Updated mission snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MissionSnapshot"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /missions/grid-status:
+    get:
+      operationId: getGridStatus
+      tags: [missions]
+      summary: Full Neural Grid status
+      description: Returns mission + all agents + token snapshot
+      responses:
+        "200":
+          description: Grid status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GridStatus"
+
+  /agents:
+    get:
+      operationId: listAgents
+      tags: [agents]
+      summary: List all COSMOS agents
+      responses:
+        "200":
+          description: Agent list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentListResponse"
+
+  /agents/token-budget:
+    get:
+      operationId: getTokenBudget
+      tags: [agents]
+      summary: Token budget snapshot
+      description: Current token usage across all agents
+      responses:
+        "200":
+          description: Token budget
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenBudgetResponse"
+
+  /agents/{agentId}/status:
+    get:
+      operationId: getAgentStatus
+      tags: [agents]
+      summary: Get agent status
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/AgentId"
+      responses:
+        "200":
+          description: Agent profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentStatusResponse"
+        "404":
+          description: Agent not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Token budget exhausted (fallback response served)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FallbackResponse"
+
+  /agents/{agentId}/dispatch:
+    post:
+      operationId: dispatchAgent
+      tags: [agents]
+      summary: Dispatch a task to an agent
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/AgentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DispatchRequest"
+      responses:
+        "200":
+          description: Task dispatched successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DispatchResult"
+        "207":
+          description: Fallback response served (token budget low)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DispatchResult"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Token budget exhausted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FallbackResponse"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    AgentId:
+      type: string
+      enum: [robin_vanguard, starlight, system]
+
+    AgentStatus:
+      type: string
+      enum: [online, standby, busy, offline]
+
+    MissionStatus:
+      type: string
+      enum: [idle, active, paused, completed, error]
+
+    MissionSnapshot:
+      type: object
+      properties:
+        active_mission:
+          type: string
+        progress:
+          type: number
+          minimum: 0
+          maximum: 100
+        system_resonance:
+          type: number
+          minimum: 0
+          maximum: 100
+        mission_id:
+          type: string
+        status:
+          $ref: "#/components/schemas/MissionStatus"
+        active_dimension:
+          type: string
+        assigned_agents:
+          type: array
+          items:
+            $ref: "#/components/schemas/AgentId"
+        started_at:
+          type: string
+        updated_at:
+          type: string
+        timestamp:
+          type: string
+      required:
+        - active_mission
+        - progress
+        - system_resonance
+        - status
+        - timestamp
+
+    MissionUpdate:
+      type: object
+      properties:
+        progress:
+          type: number
+          minimum: 0
+          maximum: 100
+        status:
+          $ref: "#/components/schemas/MissionStatus"
+        system_resonance:
+          type: number
+          minimum: 0
+          maximum: 100
+
+    AgentProfile:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/AgentId"
+        displayName:
+          type: string
+        role:
+          type: string
+        status:
+          $ref: "#/components/schemas/AgentStatus"
+        currentTask:
+          type: string
+          nullable: true
+        completedTasks:
+          type: number
+        lastActive:
+          type: string
+      required:
+        - id
+        - displayName
+        - role
+        - status
+        - completedTasks
+        - lastActive
+
+    AgentListResponse:
+      type: object
+      properties:
+        agents:
+          type: array
+          items:
+            $ref: "#/components/schemas/AgentProfile"
+        timestamp:
+          type: string
+      required:
+        - agents
+        - timestamp
+
+    AgentStatusResponse:
+      type: object
+      properties:
+        agent:
+          $ref: "#/components/schemas/AgentProfile"
+        timestamp:
+          type: string
+      required:
+        - agent
+        - timestamp
+
+    TokenBudgetEntry:
+      type: object
+      properties:
+        used:
+          type: number
+        limit:
+          type: number
+        percentUsed:
+          type: number
+        queued:
+          type: number
+      required:
+        - used
+        - limit
+        - percentUsed
+        - queued
+
+    TokenBudgetResponse:
+      type: object
+      properties:
+        budget:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/TokenBudgetEntry"
+        timestamp:
+          type: string
+      required:
+        - budget
+        - timestamp
+
+    GridStatus:
+      type: object
+      properties:
+        online:
+          type: boolean
+        activeMission:
+          $ref: "#/components/schemas/MissionSnapshot"
+        agents:
+          type: array
+          items:
+            $ref: "#/components/schemas/AgentProfile"
+        timestamp:
+          type: string
+      required:
+        - online
+        - agents
+        - timestamp
+
+    CosmosStatus:
+      type: object
+      properties:
+        active_mission:
+          type: string
+        progress:
+          type: number
+        system_resonance:
+          type: number
+        cosmos:
+          type: object
+          properties:
+            version:
+              type: string
+            dimension:
+              type: string
+            mission_status:
+              $ref: "#/components/schemas/MissionStatus"
+            agents_online:
+              type: number
+            agents_total:
+              type: number
+          required:
+            - version
+            - dimension
+            - mission_status
+            - agents_online
+            - agents_total
+        timestamp:
+          type: string
+      required:
+        - active_mission
+        - progress
+        - system_resonance
+        - timestamp
+
+    DispatchRequest:
+      type: object
+      properties:
+        task:
+          type: string
+          minLength: 1
+      required:
+        - task
+
+    DispatchResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        agentId:
+          $ref: "#/components/schemas/AgentId"
+        task:
+          type: string
+        response:
+          type: string
+        tokensUsed:
+          type: number
+        fallback:
+          type: boolean
+        timestamp:
+          type: string
+      required:
+        - success
+        - agentId
+        - task
+        - response
+        - tokensUsed
+        - fallback
+        - timestamp
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error
+
+    FallbackResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        fallback:
+          type: object
+          properties:
+            active_mission:
+              type: string
+            progress:
+              type: number
+            system_resonance:
+              type: number
+            note:
+              type: string
+        timestamp:
+          type: string
+      required:
+        - error
+        - fallback
+        - timestamp

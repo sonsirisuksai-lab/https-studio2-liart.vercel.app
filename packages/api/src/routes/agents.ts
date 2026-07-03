@@ -11,6 +11,7 @@ import { tokenGuard } from "../middleware/tokenGuard.js";
 import { requireAuth } from "../middleware/auth.js";
 import { neuralGrid } from "../services/neuralGrid.js";
 import { tokenBudget, type AgentId } from "../services/tokenBudget.js";
+import { logger } from "../lib/logger.js";
 
 const router = Router();
 
@@ -56,7 +57,7 @@ router.post("/agents/:agentId/dispatch", requireAuth, tokenGuard, async (req, re
     const result = await neuralGrid.dispatch(agentId as AgentId, task.trim());
     res.status(result.success ? 200 : 207).json(result);
   } catch (err) {
-    req.log?.error?.({ err, agentId, task }, "Agent dispatch error");
+    logger.error({ err, agentId, task }, "Agent dispatch error");
     res.status(500).json({
       error: "dispatch_error",
       message: "An unexpected error occurred during agent dispatch.",
