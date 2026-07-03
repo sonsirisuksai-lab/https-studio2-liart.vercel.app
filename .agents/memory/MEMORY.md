@@ -1,3 +1,0 @@
-- [COSMOS API architecture](cosmos-api-arch.md) — WebSocket hub wired via gridEvents EventEmitter to avoid circular deps with neuralGrid.
-- [Gemini SDK SchemaType](cosmos-api-arch.md) — @google/generative-ai v0.24.1 requires SchemaType enum (not string literals) + format:"enum" for enum fields.
-- [Token budget invariant](cosmos-api-arch.md) — allocate/release/charge pattern: pre-allocate estimate, then reconcile both directions after LLM call.
